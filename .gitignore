@@ -1,0 +1,25 @@
+venv/
+Augmentation/
+
+# MyST build outputs
+_build/
+
+# Datos: conservar únicamente las dependencias de los notebooks incluidos
+*.csv
+!cabeceras.csv
+!Data/Datos_Brutos.csv
+!Datos_Aleks_Augmented_30000_r_2_train.csv
+!Datos_Aleks_Augmented_30000_r_2_test.csv
+
+# Documentos Markdown fuera del Jupyter Book
+*.md
+!00_seleccion_base_datos.md
+!primary-sidebar-footer.md
+
+# Notebooks fuera del Jupyter Book
+*.ipynb
+!precalculo_generar_split_augmented_2.ipynb
+!precalculo_eda_comprehensivo.ipynb
+!precalculo_regresion_lineal.ipynb
+
+# Dependencias del entorno

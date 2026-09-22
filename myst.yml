@@ -1,0 +1,27 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: d9906125-e07d-4507-be15-5ef80b6fe979
+  title: "Primer Entregable del Proyecto"
+  subtitle: "Selección de Base de Datos, Análisis Exploratorio e Implementación de Modelo Base"
+  authors:
+    - Rubiel Velasquez
+    - Valentina Figueroa
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/r041292/jbook_ml202630_1
+  toc:
+    - file: 00_seleccion_base_datos.md
+    - file: precalculo_generar_split_augmented_2.ipynb
+    - file: precalculo_eda_comprehensivo.ipynb
+    - file: precalculo_regresion_lineal.ipynb
+site:
+  template: book-theme
+  title: "Entregable Proyecto Machine learning"
+  parts:
+    primary_sidebar_footer: primary-sidebar-footer.md
+  options:
+    logo_text: "Entregable Proyecto Machine learning"
+  #   favicon: favicon.ico
+  #   logo: site_logo.png
