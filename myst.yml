@@ -23,5 +23,6 @@ site:
     primary_sidebar_footer: primary-sidebar-footer.md
   options:
     logo_text: "Entregable Proyecto Machine learning"
+    style: ./layout.css
   #   favicon: favicon.ico
   #   logo: site_logo.png

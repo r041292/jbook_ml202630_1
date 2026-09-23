@@ -1,12 +1,18 @@
 # Selección de la base de datos y propósito del proyecto
 
-## Contexto académico
+## Contexto académico e institucional
 
 La base de datos registra información del curso de precálculo de la Universidad del Norte durante los periodos académicos comprendidos entre 2023 y 2025. Este curso se desarrolla antes del inicio del semestre y busca fortalecer los conocimientos matemáticos con los que los estudiantes comienzan su formación universitaria.
 
-Al inicio y al final del curso, los estudiantes son evaluados con respecto a su dominio de diferentes temas de cálculo. La finalidad general es proporcionar los fundamentos necesarios para favorecer el desempeño y la aprobación de las asignaturas de matemáticas que se cursan durante el primer semestre.
+En la Universidad del Norte, algunos programas de pregrado, como Ingeniería, Administración y otros afines, ofrecen este curso corto unas semanas antes del inicio de clases. Conocido internamente como **nivelatorio de precálculo**, su propósito es que los estudiantes alcancen una base mínima para afrontar las asignaturas de matemáticas de su primer semestre. Se busca así contribuir a un mejor desempeño en la primera evaluación parcial de esas asignaturas.
 
-Las asignaturas relacionadas que aparecen en la fuente son:
+Los contenidos y la meta de aprendizaje del nivelatorio se definen de acuerdo con los requerimientos de cada programa. Como los temas siguen una secuencia, el avance registrado permite identificar hasta qué punto ha llegado cada estudiante respecto de la meta establecida.
+
+El proceso se apoya en la plataforma ALEK, que evalúa los conocimientos al inicio, propone un plan de trabajo individual y realiza evaluaciones durante el curso para ajustar ese plan. Al finalizar, aplica una evaluación de salida. El curso también cuenta con un profesor y con estudiantes universitarios que participan como tutores. En conjunto, los registros de ALEK permiten describir el nivel de entrada y de salida, los temas aprendidos y el tiempo de trabajo en la plataforma, entre otros aspectos del proceso.
+
+Las evaluaciones de entrada y salida registran el dominio de los estudiantes en distintos temas de cálculo. En conjunto, el nivelatorio busca proporcionar fundamentos matemáticos que apoyen el desempeño y la aprobación de las asignaturas cursadas durante el primer semestre.
+
+Las asignaturas relacionadas con este curso son las siguientes:
 
 | Código | Asignatura |
 | --- | --- |
@@ -82,8 +88,37 @@ La siguiente tabla resume el significado operativo de las 17 columnas que se con
 
 ## Necesidad y estrategia de aumentación
 
-El conjunto original contiene 1.527 registros, por debajo del mínimo de 20.000. El proceso de este proyecto establece una meta de 30.000 observaciones, distribuidas en 24.000 registros de entrenamiento y 6.000 registros de prueba. La meta permite superar el requisito mínimo y mantener una división independiente para evaluar los modelos.
+El conjunto original contiene 1.527 registros, por debajo del mínimo de 20.000 observaciones establecido para el proyecto. Por esta razón, se requiere aplicar un proceso de aumentación de datos antes del análisis y el modelado.
 
-La aumentación no representa nuevos estudiantes observados directamente. Consiste en generar variantes sintéticas a partir de las observaciones disponibles, conservando el esquema de 17 columnas y aplicando perturbaciones controladas sobre variables numéricas y calificaciones. Para reducir el riesgo de fuga entre entrenamiento y prueba, la división se realiza por estudiante antes de aumentar cada partición. Las filas sin `nota_primer_parcial` se excluyen del flujo supervisado, y al final se validan el formato, los rangos, la ausencia de duplicados y la separación entre las particiones.
+El flujo implementado genera un conjunto aumentado de 30.000 registros: 24.000 para entrenamiento y 6.000 para prueba. Así se supera el mínimo solicitado y se conserva una partición independiente para evaluar los modelos.
 
-El siguiente documento del libro presenta la implementación reproducible de esta preparación y generación del dataset aumentado.
+La aumentación no representa nuevos estudiantes observados directamente: genera variantes sintéticas a partir de los registros disponibles, conserva el esquema de 17 columnas y aplica perturbaciones controladas a variables numéricas y calificaciones. Para reducir el riesgo de contaminación entre entrenamiento y prueba, primero se separan los estudiantes y luego se aumenta cada partición de forma independiente. Se excluyen del flujo supervisado las filas sin `nota_primer_parcial`; al final se validan el formato, los rangos, los duplicados y la separación entre particiones. El procedimiento se describe en el notebook [Generación reproducible del dataset aumentado](precalculo_generar_split_augmented_2.ipynb).
+
+## EDA: análisis exploratorio de datos
+
+El notebook [EDA comprehensivo](precalculo_eda_comprehensivo.ipynb) caracteriza la calidad y estructura de los datos antes del modelado. Explora la distribución de la nota del primer parcial y de las variables predictoras, sus asociaciones y posibles redundancias, además de revisar valores extremos, grupos y riesgos de fuga. Las decisiones exploratorias se calculan sobre entrenamiento y el conjunto de prueba se mantiene reservado; este notebook no entrena modelos.
+
+Conclusiones principales:
+
+- Se identificaron 58 registros de entrenamiento con `Tiempo_total_Aprendidos_hora = 0` pese a mostrar un aumento entre `Dominio_Inicial` y `Dominio_Final`. Se excluyeron del análisis, que continuó con 23.942 registros válidos.
+- La variable objetivo se conserva en su escala original; su distribución no mostró una necesidad clara de transformarla. Los valores extremos válidos se mantienen y no se eliminan automáticamente.
+- `nota_final` se excluye de las variables predictoras porque corresponde a un resultado posterior al primer parcial. Los faltantes observados se concentran en medidas de tiempo y deberán tratarse dentro del flujo de preprocesamiento.
+
+## Modelo lineal base
+
+El notebook [Regresión lineal base](precalculo_regresion_lineal.ipynb) prepara las variables dentro de un `Pipeline` y compara una referencia que predice la nota media con un modelo `LinearSVR` de formulación lineal. Evalúa el desempeño mediante validación cruzada y una partición de prueba reservada, e incluye intervalos bootstrap, análisis de residuos, curva de aprendizaje e interpretación de coeficientes. El preprocesamiento imputa faltantes, transforma y escala las variables numéricas, conserva sus valores extremos válidos y codifica las variables categóricas.
+
+En la última ejecución guardada, se evaluaron 5.963 registros válidos del conjunto de prueba. Las métricas fueron:
+
+| Modelo | RMSE | MAPE | R² | MAE |
+| --- | ---: | ---: | ---: | ---: |
+| Dummy (media) | 1,1282 | 37,7330 % | ≈ 0 | 0,9705 |
+| SVM lineal | 0,9093 | 27,1489 % | 0,3503 | 0,7329 |
+
+El intervalo bootstrap del 95 % para el SVM fue [0,8929; 0,9235] en RMSE, [26,2389 %; 28,0514 %] en MAPE y [0,3275; 0,3715] en R². `LinearSVR` no impone límites a las notas predichas, por lo que algunas podrían quedar fuera del rango observado de 0,5 a 5,0.
+
+Conclusiones principales:
+
+- El SVM lineal reduce el RMSE en 19,40 % y el MAPE en 28,05 % frente a la Dummy. Su R² de 0,3503 y MAE de 0,7329 indican una capacidad predictiva moderada: es una línea base útil, pero no un modelo de alta precisión.
+- En validación cruzada en set de entrenamiento obtuvo RMSE medio de 0,8001 y R² de 0,4981, mejores que en el test. Esta brecha aconseja cautela al estimar su generalización. La falta del identificador de estudiante en el esquema también impide construir una validación agrupada dentro del entrenamiento.
+- Los residuos se apartan de la normalidad y muestran heterocedasticidad (p < 0,001 en ambas pruebas); la asociación entre el valor predicho y el error absoluto es negativa (ρ = -0,1666). Esto aconseja cautela al interpretar los coeficientes y los intervalos, y refuerza el uso del modelo como referencia predictiva, no como herramienta de inferencia.
