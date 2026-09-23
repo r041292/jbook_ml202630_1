@@ -1,10 +1,12 @@
-# Selección de la base de datos y propósito del proyecto
+# Introducción, Selección de la base de datos y propósito del proyecto
+
+Este documento presenta el primer entregable del Proyecto de Investigación de la asignatura [MACHINE LEARNING_202630_NRC 5646](https://cursos.uninorte.edu.co/d2l/home/177738).
+
+**Objetivo del entregable:** establecer las bases del proyecto mediante (i) la selección de una base de datos pertinente; (ii) un análisis exploratorio de datos (EDA) riguroso y exhaustivo; y (iii) la implementación de un modelo base como referencia inicial, comparado con una línea base trivial.
 
 ## Contexto académico e institucional
 
-La base de datos registra información del curso de precálculo de la Universidad del Norte durante los periodos académicos comprendidos entre 2023 y 2025. Este curso se desarrolla antes del inicio del semestre y busca fortalecer los conocimientos matemáticos con los que los estudiantes comienzan su formación universitaria.
-
-En la Universidad del Norte, algunos programas de pregrado, como Ingeniería, Administración y otros afines, ofrecen este curso corto unas semanas antes del inicio de clases. Conocido internamente como **nivelatorio de precálculo**, su propósito es que los estudiantes alcancen una base mínima para afrontar las asignaturas de matemáticas de su primer semestre. Se busca así contribuir a un mejor desempeño en la primera evaluación parcial de esas asignaturas.
+En la Universidad del Norte, algunos programas de pregrado, como Ingeniería, Administración y otros afines, ofrecen este curso corto unas semanas antes del inicio de clases. Este curso es conocido internamente como **nivelatorio de precálculo**, su propósito es que los estudiantes alcancen una base mínima para afrontar las asignaturas de matemáticas de su primer semestre. Se busca así contribuir a un mejor desempeño en la primera evaluación parcial de esas asignaturas.
 
 Los contenidos y la meta de aprendizaje del nivelatorio se definen de acuerdo con los requerimientos de cada programa. Como los temas siguen una secuencia, el avance registrado permite identificar hasta qué punto ha llegado cada estudiante respecto de la meta establecida.
 
@@ -20,6 +22,8 @@ Las asignaturas relacionadas con este curso son las siguientes:
 | `MAT1100` | Cálculo I (ANEC) |
 | `MAT1101` | Cálculo I |
 | `MAT4190` | Matemáticas Fundamentales |
+
+La base de datos que se usará en este proyecto registra información del **nivelatorio de precálculo** durante los periodos académicos comprendidos entre 2023 y 2025.
 
 ## Propósito del proyecto
 
